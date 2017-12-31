@@ -1,3 +1,13 @@
 .md_configs.data
 .me_configs.data
 .Archive
+
+.sync/*
+
+.z_sync_configs.data
+
+sync_changes.log
+
+sync_hook.script
+
+**/.Archive
