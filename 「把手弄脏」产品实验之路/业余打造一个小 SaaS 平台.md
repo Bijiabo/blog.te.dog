@@ -53,3 +53,17 @@
 中间遇到了两个坑，一个是自定义域名的 ACM 证书死活在下拉列表刷不出来。后来意识到 ACM 我在亚洲某 Region 配置的，但是这里需要的 ACM 证书一定要在 美国东部配置。之前遇到过类似问题，今天没有注意到，尴尬。
 
 另外一个是配置好 ACM 和域名 DNS 解析后，解析还是不生效。访问自定义的域名地址界面返回 502 错误，内容提示：The request could not be satisfied. 后来发现是 CloudFront 中 Distributions 的配置项 Alternate Domain Names (CNAMEs) 没有填写导致的。这里伴随着一个意识上的错误，先前误以为选择好 ACM 证书就相当于已经指定了域名。但是一个 ACM 证书可能对应多个域名，从逻辑上来说 CloudFront 也没有办法很好的来判断请求域名是否合法呢。
+
+### 02.22
+
+#### S3 上传问题
+
+后台产品新建需要上传至少 1 张图片，这个事情我不打算再拖延了。看了一下 S3 存储相关的内容，需要后端做相应的支持。实现上，前端使用 [react-s3-uploader](https://github.com/odysseyscience/react-s3-uploader) 搭建，后端使用这个库文档中对应的方法请求接口实现 sign url 供应。
+
+理论上来说这个功能的实现不算复杂，但是在前端请求到 sign url 后，请求 s3 报错，内容为：
+
+```
+ailed to load https://csp-product.s3.amazonaws.com/test1.jpg?Signature=ziXeHn41***********iRktn1yUm13NxiPAlbk%3D&Expires=1519278450&AWSAccessKeyId=A***************A&x-amz-acl=public-read: Response for preflight is invalid (redirect)
+```
+
+检查了一下 Bucket 的权限设置，没有什么问题，主要是返回了一个 307 条转。仔细看了一下，从 *.s3.amazonaws.com 跳转到对应的 region 服务地址去了 *.s3-ap-southeast-1.amazonaws.com。一番查询，在 [这里](http://www.corrspt.com/blog/2016/01/17/uploading-to-amazon-s3-response-for-preflight-is-invalid-redirect-307/) 找到了答案，原来是 s3 的主域名地址没有生效，于是临时跳转到对应 region 的地址去了….微坑，等。
