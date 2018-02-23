@@ -67,3 +67,13 @@ ailed to load https://csp-product.s3.amazonaws.com/test1.jpg?Signature=ziXeHn41*
 ```
 
 检查了一下 Bucket 的权限设置，没有什么问题，主要是返回了一个 307 条转。仔细看了一下，从 *.s3.amazonaws.com 跳转到对应的 region 服务地址去了 *.s3-ap-southeast-1.amazonaws.com。一番查询，在 [这里](http://www.corrspt.com/blog/2016/01/17/uploading-to-amazon-s3-response-for-preflight-is-invalid-redirect-307/) 找到了答案，原来是 s3 的主域名地址没有生效，于是临时跳转到对应 region 的地址去了….微坑，等。
+
+
+
+## 邮件通知
+
+### 02.23
+
+考虑到国外用户的使用习惯，与国内有些区别，大多使用邮箱来进行账户的确认和找回。先前搭建类似服务直接用程序通过 SMTP 来发送邮件，感觉效率很低。这次全线使用 AWS 的服务，于是看了一下 SES，直接集成了 [Django-ses](https://github.com/django-ses/django-ses) 来进行发信。
+
+AWS SES 对外发信需要申请 limit increase，想着前期用户不多，先申请个每天 2000 封上线吧，工单简单说明了一下业务类型和需求，不到一天就审核通过，上来给了 50000 每天的发送上线，感觉我申请的 2000 太没有底气了 >_>...
