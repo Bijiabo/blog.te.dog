@@ -15,3 +15,8 @@ Cognito 提供了各个开发平台的 SDK 和接口，而且连 React Native  �
 4. 验证用户若没有，需要自动注册并返回 user，这一步需要添加 `User.objects.get_or_create_for_cognito` 方法，我的系统先前没用使用自己的  User Model 代替 Django 本身的，所以也没有自定义 UserManager，如果因为要添加这一个方法做诸如此类的改动，感觉是没有必要的，蛮纠结的。先直接修改包的源代码调通，感觉这个地方的设计需要考虑到兼容使用者的各种应用场景，不然会有和我一样的人踩坑的
 
 当然，也感谢 `django-cognito-jwt` 这个库文档的不完善，让我查阅了不少资料，学习到了很多知识，若不是因为遇到这个问题，可能我还一直不知道 jwt token 三段分别是代表什么意思，含义如何呢。接下来，我想也许需要修改源代码，提交一个新的 Pull Request 了。
+
+简单修改代码，本地测试 OK，顺便改进一下文档，应该会被 merge 进去吧，[Pull Request 地址](https://github.com/LabD/django-cognito-jwt/pull/5)
+
+## 参考文档
+- [将令牌与用户池结合使用](https://docs.aws.amazon.com/zh_cn/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html)
